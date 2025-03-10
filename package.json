@@ -37,7 +37,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.10",
+    "vite": "^6.2.1",
     "@mantine/core": "^7.3.2",
     "@mantine/hooks": "^7.3.2",
     "@mantine/dates": "^7.3.2",
