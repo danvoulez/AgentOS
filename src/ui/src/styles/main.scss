@@ -1,0 +1,79 @@
+// Estilos globais inspirados no GitKraken
+:root {
+  --primary-bg: #1A1B1E;
+  --secondary-bg: #25262B;
+  --accent-blue: #3A61FF;
+  --text-primary: #C1C2C5;
+  --text-secondary: #909296;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--text-primary);
+}
+
+// Estilo para a barra lateral
+.mantine-Navbar-root {
+  background-color: var(--secondary-bg);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Estilo para o cabeçalho
+.mantine-Header-root {
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Estilos para botões
+.mantine-Button-root {
+  background-color: var(--accent-blue);
+  &:hover {
+    background-color: darken(var(--accent-blue), 10%);
+  }
+}
+
+// Animações suaves
+.mantine-AppShell-main {
+  transition: all 0.3s ease;
+}
+
+// Scrollbars personalizados
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 4px;
+  
+  &:hover {
+    background: var(--text-primary);
+  }
+}
+
+// Modo hyper-secreto
+.hyper-secret {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+  
+  &:hover {
+    filter: none;
+  }
+}
+
+// Efeitos de hover
+.hover-effect {
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}

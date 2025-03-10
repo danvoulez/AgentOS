@@ -1,0 +1,81 @@
+// Cores do tema GitKraken
+$primary-bg: #1A1B1E;
+$secondary-bg: #25262B;
+$accent-blue: #3A61FF;
+$text-primary: #C1C2C5;
+$text-secondary: #909296;
+
+// Gradientes
+$gradient-dark: linear-gradient(180deg, $secondary-bg 0%, $primary-bg 100%);
+$gradient-blue: linear-gradient(135deg, $accent-blue 0%, darken($accent-blue, 20%) 100%);
+
+// Espaçamento
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Bordas
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Sombras
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+
+// Transições
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal: 1040;
+$z-index-popover: 1050;
+$z-index-tooltip: 1060;
+
+// Mixins úteis
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin hover-effect {
+  transition: transform $transition-fast;
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@mixin hyper-secret {
+  filter: blur(5px);
+  transition: filter $transition-normal;
+  &:hover {
+    filter: none;
+  }
+}
+
+// Media queries
+@mixin responsive($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+}
