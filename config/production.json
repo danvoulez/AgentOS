@@ -1,0 +1,8 @@
+{
+  "env": "production",
+  "port": 80,
+  "database": {
+    "uri": "mongodb://mongo:27017/agentos"
+  },
+  "jwtSecret": "producesecretkey"
+}

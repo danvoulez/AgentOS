@@ -1,0 +1,76 @@
+
+# docker-compose.yml
+version: '3.8'
+services:
+  agentos-core:
+    build: .
+    container_name: agentos-core
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - vox-service
+  people-service:
+    build: ./services/people-service
+    container_name: people-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+  order-service:
+    build: ./services/order-service
+    container_name: order-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      - mongodb
+  media-service:
+    build: ./services/media-service
+    container_name: media-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mongodb
+  ai-agent:
+    build: ./services/ai-agent
+    container_name: ai-agent
+    ports:
+      - "3005:3005"
+    depends_on:
+      - mongodb
+  access-control:
+    build: ./services/access-control
+    container_name: access-control
+    ports:
+      - "3006:3006"
+    depends_on:
+      - mongodb
+  vox-service:
+    build: ./services/vox-service
+    container_name: vox-service
+    ports:
+      - "3030:3030"
+    environment:
+      - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - VOX_PORT=3030
+      - MONGO_URI=mongodb://mongodb:27017/agentos
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=agentos
+
+volumes:
+  mongodb_data:

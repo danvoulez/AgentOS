@@ -1,0 +1,75 @@
+name: Deploy AgentOS
+
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Build and push Core
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-core:latest
+        
+    - name: Build and push Vox Service
+      uses: docker/build-push-action@v2
+      with:
+        context: ./services/vox-service
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-vox:latest
+        
+    - name: Build and push People Service
+      uses: docker/build-push-action@v2
+      with:
+        context: ./services/people-service
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-people:latest
+        
+    - name: Build and push Media Service
+      uses: docker/build-push-action@v2
+      with:
+        context: ./services/media-service
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-media:latest
+        
+    - name: Build and push Order Service
+      uses: docker/build-push-action@v2
+      with:
+        context: ./services/order-service
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-order:latest
+        
+    - name: Build and push Messaging Service
+      uses: docker/build-push-action@v2
+      with:
+        context: ./services/messaging
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/agentos-messaging:latest
+        
+    - name: Deploy to production
+      if: ${{ github.ref == 'refs/heads/main' && secrets.DEPLOY_SSH_KEY != '' }}
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /opt/agentos
+          docker-compose pull
+          docker-compose up -d
