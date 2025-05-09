@@ -1,49 +1,33 @@
 services:
   - type: web
-    name: agentos-backend
+    name: agentos-api
     env: python
-    buildCommand: cd backend && chmod +x build.sh && ./build.sh
-    startCommand: cd backend && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+    autoDeploy: true
+    branch: main
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.8
-      - key: PORT
-        value: 8000
-      - key: MONGODB_URI
-        sync: false
-      - key: REDIS_URL
-        sync: false
-      - key: SECRET_KEY
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
-
-  - type: worker
-    name: agentos-worker
-    env: python
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && celery -A app.worker.celery_app worker --loglevel=info
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.8
-      - key: MONGODB_URI
-        sync: false
-      - key: REDIS_URL
-        sync: false
-      - key: SECRET_KEY
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
+      - fromGroup: agentos-envs
 
   - type: web
-    name: agentos-frontend
+    name: flip-agentos
     env: node
-    buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npm run preview -- --host 0.0.0.0 --port $PORT
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npx vite preview --port 8080
+    autoDeploy: true
+    branch: main
     envVars:
-      - key: NODE_VERSION
-        value: 18
       - key: VITE_API_URL
-        value: https://agentos-backend.onrender.com/api/v1
-      - key: VITE_WS_URL
-        value: wss://agentos-backend.onrender.com/ws
+        fromService:
+          name: agentos-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: VITE_WEBSOCKET_URL
+        fromService:
+          name: agentos-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: VITE_WEBSOCKET_API_KEY
+        value: mock_ws_key_123

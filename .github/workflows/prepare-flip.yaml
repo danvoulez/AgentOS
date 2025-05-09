@@ -1,0 +1,27 @@
+# Prepara a pasta /flip a partir de um ZIP versionado em ./tools/
+# Gatilho manual via botão "Run workflow" no GitHub Actions
+
+name: Preparar estrutura do Flip
+
+on:
+  workflow_dispatch:
+
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Extrair Flip App para /flip
+        run: |
+          unzip -o ./tools/flip-agentos.zip -d flip
+
+      - name: Comitar pasta /flip no repositório
+        run: |
+          git config user.name "agentos-flip-bot"
+          git config user.email "infra@voulezvous.system"
+          git add flip
+          git commit -m "infra: estrutura inicial do Flip App automatizada"
+          git push
