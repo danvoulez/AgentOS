@@ -14,8 +14,9 @@ services:
     name: flip-agentos
     env: node
     plan: free
+    rootDir: ./flip
     buildCommand: npm install && npm run build
-    startCommand: npx vite preview --port 8080
+    startCommand: npm run preview -- --port 8080
     autoDeploy: true
     branch: main
     envVars:
