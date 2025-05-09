@@ -1,6 +1,3 @@
-# Prepara a pasta /flip a partir de um ZIP versionado em ./tools/
-# Gatilho manual via botão "Run workflow" no GitHub Actions
-
 name: Preparar estrutura do Flip
 
 on:
@@ -11,12 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout do repositório com histórico completo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # garante acesso ao histórico completo e arquivos versionados
+
+      - name: Baixar arquivos grandes (Git LFS)
+        run: git lfs pull || echo "sem arquivos LFS, seguindo..."
+
+      - name: Verificar existência do zip
+        run: |
+          if [ ! -f ./tools/flip-agentos.zip ]; then
+            echo "❌ Arquivo ./tools/flip-agentos.zip não encontrado!"
+            exit 1
+          fi
 
       - name: Extrair Flip App para /flip
-        run: |
-          unzip -o ./tools/flip-agentos.zip -d flip
+        run: unzip -o ./tools/flip-agentos.zip -d flip
 
       - name: Comitar pasta /flip no repositório
         run: |
