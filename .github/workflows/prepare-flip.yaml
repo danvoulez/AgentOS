@@ -37,7 +37,6 @@ jobs:
           echo "🚚 Movendo arquivos..."
           mkdir flip
           mv tools/source/* flip/
-          mv tools/source/src flip/src
 
       - name: Limpar lixo antigo (zip ou source)
         run: |
