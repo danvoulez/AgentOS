@@ -1,27 +1,53 @@
-# Prepara a pasta /flip a partir de um ZIP versionado em ./tools/
-# Gatilho manual via botão "Run workflow" no GitHub Actions
-
-name: Preparar estrutura do Flip
+name: Mover estrutura do Flip App
 
 on:
   workflow_dispatch:
 
 jobs:
-  preparar:
+  reorganizar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout do repositório completo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Extrair Flip App para /flip
+      - name: Verificar se a pasta tools/source existe
         run: |
-          unzip -o ./tools/flip-agentos.zip -d flip
+          echo "📦 Verificando pasta tools/source..."
+          if [ ! -d tools/source ]; then
+            echo "❌ tools/source não encontrada. Aborto."
+            exit 1
+          fi
+          if [ ! -f tools/source/package.json ]; then
+            echo "❌ Nenhum Flip App válido em tools/source. Falta o package.json"
+            exit 1
+          fi
 
-      - name: Comitar pasta /flip no repositório
+      - name: Verificar se a pasta /flip já existe
         run: |
-          git config user.name "agentos-flip-bot"
+          if [ -d flip ]; then
+            echo "⚠️ A pasta /flip já existe. Abortando para evitar sobrescrita."
+            exit 1
+          fi
+
+      - name: Mover conteúdo de tools/source para flip/
+        run: |
+          echo "🚚 Movendo arquivos..."
+          mkdir flip
+          mv tools/source/* flip/
+          mv tools/source/src flip/src
+
+      - name: Limpar lixo antigo (zip ou source)
+        run: |
+          echo "🧹 Limpando tools/"
+          rm -rf tools/source tools/flip-agentos.zip || true
+
+      - name: Commitar reorganização
+        run: |
+          git config user.name "agentos-auto-bot"
           git config user.email "infra@voulezvous.system"
-          git add flip
-          git commit -m "infra: estrutura inicial do Flip App automatizada"
+          git add flip tools || echo "nada a adicionar"
+          git diff --cached --quiet && echo '🔸 Nada mudou.' || git commit -m "infra: reorganiza estrutura do Flip App para /flip"
           git push
