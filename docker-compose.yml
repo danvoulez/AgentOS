@@ -1,76 +1,86 @@
-
-# docker-compose.yml
 version: '3.8'
+
 services:
-  agentos-core:
-    build: .
-    container_name: agentos-core
-    environment:
-      - NODE_ENV=production
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
-      - vox-service
-  people-service:
-    build: ./services/people-service
-    container_name: people-service
-    ports:
-      - "3001:3001"
-    depends_on:
-      - mongodb
-  order-service:
-    build: ./services/order-service
-    container_name: order-service
-    ports:
-      - "3004:3004"
-    depends_on:
-      - mongodb
-  media-service:
-    build: ./services/media-service
-    container_name: media-service
-    ports:
-      - "3003:3003"
-    depends_on:
-      - mongodb
-  ai-agent:
-    build: ./services/ai-agent
-    container_name: ai-agent
-    ports:
-      - "3005:3005"
-    depends_on:
-      - mongodb
-  access-control:
-    build: ./services/access-control
-    container_name: access-control
-    ports:
-      - "3006:3006"
-    depends_on:
-      - mongodb
-  vox-service:
-    build: ./services/vox-service
-    container_name: vox-service
-    ports:
-      - "3030:3030"
-    environment:
-      - NODE_ENV=production
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - VOX_PORT=3030
-      - MONGO_URI=mongodb://mongodb:27017/agentos
-      - JWT_SECRET=${JWT_SECRET}
-    volumes:
-      - ./logs:/app/logs
-    depends_on:
-      - mongodb
   mongodb:
-    image: mongo:5.0
-    container_name: mongodb
+    image: mongo:latest
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
     environment:
-      - MONGO_INITDB_DATABASE=agentos
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-password}
+    restart: always
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-password}@mongodb:27017/
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-a_very_secure_secret_key_for_jwt_32_bytes_long}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+      - PORT=8000
+    depends_on:
+      - mongodb
+      - redis
+    restart: always
+    command: >
+      bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+    environment:
+      - MONGODB_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-password}@mongodb:27017/
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-a_very_secure_secret_key_for_jwt_32_bytes_long}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - mongodb
+      - redis
+      - backend
+    restart: always
+    command: >
+      bash -c "celery -A app.worker.celery_app worker --loglevel=info"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:${BACKEND_PORT:-8000}/api/v1
+      - VITE_WS_URL=ws://localhost:${BACKEND_PORT:-8000}/ws
+    depends_on:
+      - backend
+    restart: always
 
 volumes:
   mongodb_data:
+  redis_data:

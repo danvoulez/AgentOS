@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: agentos-backend
+    env: python
+    buildCommand: cd backend && chmod +x build.sh && ./build.sh
+    startCommand: cd backend && gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: PORT
+        value: 8000
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: worker
+    name: agentos-worker
+    env: python
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && celery -A app.worker.celery_app worker --loglevel=info
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: web
+    name: agentos-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run preview -- --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: VITE_API_URL
+        value: https://agentos-backend.onrender.com/api/v1
+      - key: VITE_WS_URL
+        value: wss://agentos-backend.onrender.com/ws
