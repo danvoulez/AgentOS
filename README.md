@@ -254,3 +254,10 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ---
 
 This README provides a good starting point. You can expand on specific sections, add more details about the project's purpose, or include a "Troubleshooting" section as needed.
+## 🖋️ Assinatura
+
+**Arquitetura**: [@danvoulez](https://github.com/danvoulez)  
+Assistência técnica por **OpenAI GPT-4o** e **Gemini 2.5**  
+© 2025 [VoulezVous.ai](https://voulezvous.ai) – Todos os direitos reservados
+
+> Este sistema é construído sob princípios de responsabilidade computável, clareza institucional e fluidez operacional.
