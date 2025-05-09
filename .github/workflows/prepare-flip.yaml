@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 name: Mover estrutura do Flip App
+=======
+name: Preparar estrutura do Flip
+>>>>>>> 067bda52fe94dc0dcb546eab99125f54ee26f7c6
 
 on:
   workflow_dispatch:
@@ -8,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+<<<<<<< HEAD
       - name: Checkout do repositório completo
         uses: actions/checkout@v3
         with:
@@ -24,6 +29,25 @@ jobs:
             echo "❌ Nenhum Flip App válido em tools/source. Falta o package.json"
             exit 1
           fi
+=======
+      - name: Checkout do repositório com histórico completo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # garante acesso ao histórico completo e arquivos versionados
+
+      - name: Baixar arquivos grandes (Git LFS)
+        run: git lfs pull || echo "sem arquivos LFS, seguindo..."
+
+      - name: Verificar existência do zip
+        run: |
+          if [ ! -f ./tools/flip-agentos.zip ]; then
+            echo "❌ Arquivo ./tools/flip-agentos.zip não encontrado!"
+            exit 1
+          fi
+
+      - name: Extrair Flip App para /flip
+        run: unzip -o ./tools/flip-agentos.zip -d flip
+>>>>>>> 067bda52fe94dc0dcb546eab99125f54ee26f7c6
 
       - name: Verificar se a pasta /flip já existe
         run: |
