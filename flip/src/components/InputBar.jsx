@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { PaperAirplaneIcon, MicrophoneIcon } from "@heroicons/react/24/solid"
 import { useAuth } from "../hooks/useAuth"
-import apiClient from "../services/apiClient"
+import apiClient from "../services/api" // Changed apiClient to api
 
 /**
  * InputBar component with text and voice input support
