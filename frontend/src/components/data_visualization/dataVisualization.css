@@ -1,0 +1,162 @@
+/* dataVisualization.css */
+
+/* DataTable and ExplicitTable */
+.data-table-container {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg); /* Larger radius for premium feel */
+  background-color: var(--color-bg-surface);
+  max-width: 100%;
+  box-shadow: var(--shadow-inner-subtle); /* Subtle depth */
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate; /* For border-spacing and cleaner rounded corners */
+  border-spacing: 0;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary); /* Default to secondary for table data */
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--datatable-cell-padding-refined);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-subtle);
+  white-space: nowrap;
+  line-height: var(--line-height-snug);
+}
+.data-table td {
+  color: var(--color-text-primary); /* Primary text for actual data */
+}
+
+
+.data-table th {
+  background-color: transparent; /* Cleaner header */
+  color: var(--color-text-muted);
+  font-weight: 500; /* Less heavy */
+  font-size: var(--datatable-header-font-size);
+  text-transform: uppercase;
+  letter-spacing: var(--datatable-header-letter-spacing);
+  border-bottom-width: 1px; /* Stronger bottom border for header */
+  border-bottom-color: var(--color-border-strong);
+  position: sticky; /* Sticky header */
+  top: 0;
+  z-index: 1; /* Ensure it's above table content */
+}
+.data-table th:first-child { border-top-left-radius: var(--radius-lg); } /* For container rounding */
+.data-table th:last-child { border-top-right-radius: var(--radius-lg); }
+
+.data-table tbody tr {
+  min-height: var(--datatable-row-min-height);
+  transition: background-color var(--animation-duration-fast) var(--animation-timing-function-ease);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.data-table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--radius-lg); }
+.data-table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--radius-lg); }
+
+
+.data-table tbody tr:hover {
+  background-color: var(--color-bg-element-hover);
+}
+
+.data-table-cell-muted {
+  color: var(--color-text-muted);
+  font-style: normal; /* Remove italic for more formal look */
+}
+
+.data-table-cell-object,
+.data-list-item-object {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  background-color: var(--color-bg-element);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  max-width: 280px;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.data-table-empty,
+.data-list-empty,
+.kv-block-empty {
+  padding: var(--spacing-xl); /* More generous padding */
+  color: var(--color-text-muted);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  background-color: transparent; /* Cleaner for empty states inside components */
+  border: none;
+}
+.data-table-empty-row {
+  text-align: center !important;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  height: calc(3 * var(--datatable-row-min-height)); /* Give it some height */
+}
+
+/* KeyValueBlock */
+.kv-block {
+  background-color: var(--color-bg-surface);
+  padding: var(--kvblock-padding, var(--spacing-lg)); /* More generous default padding */
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-subtle);
+  font-family: var(--font-family-sans);
+  box-shadow: var(--shadow-inner-subtle);
+}
+
+.kv-block-entry {
+  display: grid; /* Use grid for better alignment */
+  grid-template-columns: minmax(120px, max-content) 1fr; /* Key column flexible, value takes rest */
+  gap: var(--spacing-sm);
+  padding: var(--kvblock-item-padding-y) 0;
+  border-bottom: 1px solid var(--color-border-soft);
+  align-items: start; /* Align items at the start for multi-line values */
+}
+.kv-block-entry:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.kv-block-entry:first-child {
+  padding-top: 0;
+}
+
+
+.kv-block-key {
+  color: var(--color-text-secondary);
+  font-weight: var(--kvblock-key-font-weight);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-snug);
+  padding-top: calc( (var(--font-size-sm) * var(--line-height-snug) - var(--font-size-sm)) / 2 ); /* Align baseline if single line */
+}
+
+.kv-block-value {
+  color: var(--color-text-primary);
+  font-size: var(--kvblock-value-font-size);
+  line-height: var(--line-height-snug);
+  word-break: break-word;
+}
+.kv-block-value-muted {
+  color: var(--color-text-muted);
+}
+.kv-block-value-object {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  padding: var(--spacing-xs);
+  background-color: var(--color-bg-element);
+  border-radius: var(--radius-sm);
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* VisualFallback (reusing from states.css, just ensure it's loaded) */

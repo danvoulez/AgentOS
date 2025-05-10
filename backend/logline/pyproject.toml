@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "logline-v2-core"
+version = "0.2.0"
+description = "LogLine V2 - Pragmatic Core Implementation"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.111.0"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+pydantic = "^2.7.1"
+pydantic-settings = "^2.2.1"
+motor = "^3.4.0"
+loguru = "^0.7.2"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+httpx = "^0.27.0"
+openai = "^1.28.0" # Or your chosen LLM library
+python-dotenv = "^1.0.1"
+orjson = "^3.10.3" # Fast JSON
+# opa-python-client = "^1.0.0" # Alternative: Use OPA client library instead of httpx
+# redis = {extras = ["hiredis"], version = "^5.0.4"} # Add if Redis needed beyond simple WS manager state
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+pytest-asyncio = "^0.23.6"
+httpx = "^0.27.0" # For test client
+pytest-mock = "^3.12.0"
+# mongomock-motor = "^0.0.2a2" # Or use testcontainers
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+  mongo_logline_v2:
+    image: mongo:7
+    container_name: mongo_logline_v2
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_logline_v2_data:/data/db
+    environment:
+      TZ: UTC
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  opa_logline_v2:
+    image: openpolicyagent/opa:latest-rootless
+    container_name: opa_logline_v2
+    restart: unless-stopped
+    ports:
+      - "8182:8181"
+    volumes:
+      - ./opa:/policies
+    command: ["run", "--server", "--addr", ":8181", "/policies/policy.rego"]
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8181/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  api_logline_v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_logline_v2
+    restart: unless-stopped
+    depends_on:
+      mongo_logline_v2:
+        condition: service_healthy
+      opa_logline_v2:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./app:/app/app
+      - ./scripts:/app/scripts
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://mongo_logline_v2:27017/logline_v2_db
+      - OPA_URL=http://opa_logline_v2:8181/v1/data/logline/authz/allow
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+
+  seed_logline_v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: seed_logline_v2
+    depends_on:
+      mongo_logline_v2:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://mongo_logline_v2:27017/logline_v2_db
+      - PYTHONPATH=/app
+    command: ["python", "/app/scripts/seed_user.py"]
+    restart: "no"
+
+volumes:
+  mongo_logline_v2_data:
+    driver: local

@@ -1,0 +1,83 @@
+.smart-block {
+  border-width: var(--border-width);
+  border-style: solid;
+  border-radius: var(--border-radius-md);
+  background-color: var(--smartblock-bg-default);
+  border-color: var(--smartblock-border-default);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease-in-out;
+}
+
+.smart-block-style-highlight {
+  background-color: var(--smartblock-bg-highlight);
+  border-left: 4px solid var(--theme-primary-color);
+}
+
+.smart-block-style-minimal {
+  box-shadow: none;
+  border: none;
+  background-color: transparent;
+  padding: var(--spacing-xs) !important;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+.data-table th, .data-table td {
+  padding: var(--datatable-cell-padding);
+  text-align: left;
+  border-bottom: var(--border-width) solid var(--theme-border-color);
+}
+.data-table th {
+  background-color: var(--datatable-header-bg);
+  font-weight: var(--font-weight-bold);
+  color: var(--theme-primary-color);
+}
+.data-table tbody tr:hover {
+  background-color: var(--datatable-row-hover-bg);
+}
+
+.kv-block dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--kvblock-spacing) var(--spacing-md);
+}
+.kv-block dt {
+  font-weight: var(--font-weight-bold);
+  color: var(--kvblock-key-color);
+}
+.kv-block dd {
+  margin-left: 0;
+  color: var(--kvblock-value-color);
+}
+
+.card-list {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.card-list-item {
+  background-color: var(--theme-surface-color);
+  border: var(--border-width) solid var(--theme-border-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+.card-list-item h5 {
+  margin-top: 0;
+  color: var(--theme-primary-color);
+}
+
+.data-list ul {
+  list-style: none;
+  padding: 0;
+}
+.data-list li {
+  padding: var(--spacing-sm) 0;
+  border-bottom: var(--border-width) solid var(--theme-border-color);
+}
+.data-list li:last-child {
+  border-bottom: none;
+}

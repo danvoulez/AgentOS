@@ -1,0 +1,112 @@
+/* adaptiveRenderer.css */
+
+/* SmartBlock */
+.smart-block {
+  background-color: var(--smartblock-bg-default);
+  border: 1px solid var(--smartblock-border-default);
+  border-radius: var(--smartblock-radius);
+  padding: var(--smartblock-padding-default);
+  transition: background-color var(--transition-duration-medium) var(--transition-timing-default),
+              border-color var(--transition-duration-medium) var(--transition-timing-default),
+              box-shadow var(--transition-duration-medium) var(--transition-timing-default);
+  width: 100%; /* Ensure it takes available width */
+}
+
+.smart-block.compact {
+  padding: var(--smartblock-padding-compact);
+}
+
+.smart-block.highlight {
+  background-color: var(--smartblock-bg-highlight);
+  border-color: var(--smartblock-border-highlight);
+  box-shadow: 0 0 0 1px var(--smartblock-border-highlight), var(--shadow-sm); /* Subtle inner glow + shadow */
+}
+
+.smart-block.minimal {
+  background-color: transparent;
+  border: none;
+  padding: 0; /* Minimal style might remove padding */
+  box-shadow: none;
+}
+
+.smart-block-header {
+  margin-bottom: var(--mosaic-spacing-3); /* Default spacing if header exists */
+}
+.smart-block.compact .smart-block-header {
+  margin-bottom: var(--mosaic-spacing-2);
+}
+.smart-block.minimal .smart-block-header {
+  margin-bottom: var(--mosaic-spacing-2); /* Minimal might still want some space if header exists */
+}
+
+
+/* TooltipHeader */
+.tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: var(--mosaic-spacing-2);
+  margin-bottom: var(--mosaic-spacing-3); /* Add default bottom margin */
+}
+
+.tooltip-header-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+.tooltip-header-title.large {
+  font-size: 1.375rem; /* 22px */
+}
+
+
+/* Shared Tooltip Styles using Framer Motion Tooltip */
+/* These are general styles for a custom tooltip that could be used with TooltipHeader */
+.custom-tooltip {
+  position: absolute;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  padding: var(--tooltip-padding);
+  border-radius: var(--tooltip-radius);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  box-shadow: var(--tooltip-shadow);
+  z-index: 50; /* Ensure it's above other elements */
+  max-width: 300px;
+  pointer-events: none; /* Important for Framer Motion's hover handling */
+}
+
+.custom-tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+/* Arrow positioning logic will be handled by Framer Motion Popper,
+   but these are base styles if you were to do it manually or for simple cases. */
+.custom-tooltip-arrow.bottom {
+  bottom: 100%;
+  left: 50%;
+  margin-left: calc(-1 * var(--tooltip-arrow-size));
+  border-width: 0 var(--tooltip-arrow-size) var(--tooltip-arrow-size);
+  border-color: transparent transparent var(--tooltip-bg) transparent;
+}
+.custom-tooltip-arrow.top {
+  top: 100%;
+  left: 50%;
+  margin-left: calc(-1 * var(--tooltip-arrow-size));
+  border-width: var(--tooltip-arrow-size) var(--tooltip-arrow-size) 0;
+  border-color: var(--tooltip-bg) transparent transparent transparent;
+}
+/* Add .left and .right arrow styles if needed */
+
+/* General icon style for tooltips or info */
+.info-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  cursor: help; /* Indicates it's interactive for info */
+  flex-shrink: 0;
+}
+.info-icon:hover {
+  color: var(--color-text-info);
+}
